@@ -1,0 +1,28 @@
+name: AIAssistantConfig
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    macOS: '13.0'
+targets:
+  AIAssistantConfig:
+    type: application
+    platform: macOS
+    sources:
+      - .
+    resources:
+      - Resources
+      - Info.plist
+    info:
+      path: Info.plist
+    dependencies: []
+schemes:
+  AIAssistantConfig:
+    build:
+      targets:
+        AIAssistantConfig: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    archive:
+      config: Release

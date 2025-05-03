@@ -1,0 +1,81 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "AIAssistantConfig-arm64-apple-macosx15.0-debug.exe": ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe>"]
+  "AIAssistantConfig-arm64-apple-macosx15.0-debug.module": ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe>","<AIAssistantConfig-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe>","<AIAssistantConfig-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig":
+    is-mutated: true
+commands:
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig-entitlement.plist"]
+    description: "Write auxiliary file /Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig-entitlement.plist"
+
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/AIAssistantApp.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ConfigurationStore.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ContentView.swift"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/sources"]
+    description: "Write auxiliary file /Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/sources"
+
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swift.o"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.product/Objects.LinkFileList"
+
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe>":
+    tool: phony
+    inputs: ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    outputs: ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe>"]
+
+  "<AIAssistantConfig-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/Modules/AIAssistantConfig.swiftmodule"]
+    outputs: ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.AIAssistantConfig-arm64-apple-macosx15.0-debug.exe":
+    tool: shell
+    inputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.product/Objects.LinkFileList"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/AIAssistantConfig"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug","-o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig","-module-name","AIAssistantConfig","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_AIAssistantConfig_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.product/Objects.LinkFileList","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/Modules/AIAssistantConfig.swiftmodule","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.AIAssistantConfig-arm64-apple-macosx15.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig-entitlement.plist"]
+    outputs: ["<AIAssistantConfig-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/AIAssistantConfig"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig-entitlement.plist","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig"]
+
+  "C.AIAssistantConfig-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/AIAssistantApp.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ConfigurationStore.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ContentView.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/sources"]
+    outputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swift.o","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/Modules/AIAssistantConfig.swiftmodule"]
+    description: "Compiling Swift Module 'AIAssistantConfig' (3 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","AIAssistantConfig","-emit-dependencies","-emit-module","-emit-module-path","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/Modules/AIAssistantConfig.swiftmodule","-output-file-map","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/output-file-map.json","-incremental","-c","@/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/sources","-I","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-enable-batch-mode","-index-store-path","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j8","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","AIAssistantConfig_main","-color-diagnostics","-swift-version","5","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","swiftconfigui"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/Package.swift","/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

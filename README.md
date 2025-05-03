@@ -16,11 +16,25 @@
 <img src="./images/ada-is-back.png" alt="realtime-assistant" style="max-width: 800px;">
 
 ## Setup
+
+### Command Line Setup
 - [Install uv](https://docs.astral.sh/uv/), the hyper modern Python package manager.
 - Setup environment `cp .env.sample .env` add your `OPENAI_API_KEY` and a `FIRECRAWL_API_KEY` for scraping.
 - Update `personalization.json` to fit your setup
 - Install dependencies `uv sync`
 - Run the realtime assistant `uv run main` or `uv run main --prompts "Hello, how are you?|What time is it?|Open Hacker News"`
+
+### macOS SwiftUI Configuration (Recommended)
+For macOS users, a native SwiftUI configuration app is available:
+
+1. Open the `SwiftConfigUI` directory in Xcode
+2. Build and run the application (⌘R)
+3. Use the UI to configure all settings and launch the assistant
+
+The SwiftUI app provides a user-friendly interface for:
+- Setting up API keys and file paths
+- Customizing personalization settings
+- Launching the assistant with optional initial prompts
 
 ## Assistant Tools
 > See [TOOLS.md](TOOLS.md) for a detailed list of available tools and their descriptions.

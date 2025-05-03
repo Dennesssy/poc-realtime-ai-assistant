@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ada - macOS AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --secondary-color: #86b9ff;
+            --dark-color: #333;
+            --light-color: #f5f5f7;
+            --success-color: #34c759;
+            --warning-color: #ff9500;
+            --danger-color: #ff3b30;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo i {
+            color: white;
+            font-size: 60px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(245, 245, 247, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 15px 0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            color: #666;
+            transition: var(--transition);
+            border-radius: var(--border-radius);
+            margin: 0 5px;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 113, 227, 0.1);
+        }
+
+        .tab-btn.active::after {
+            width: 60%;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(0, 113, 227, 0.05);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+            color: var(--dark-color);
+        }
+
+        .card p {
+            margin-bottom: 15px;
+        }
+
+        /* Feature grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature h3 {
+            margin-bottom: 15px;
+        }
+
+        /* Workflow */
+        .workflow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .step:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon i {
+            font-size: 35px;
+            color: var(--primary-color);
+        }
+
+        /* Screenshots */
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .screenshot {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .screenshot:hover {
+            transform: scale(1.02);
+        }
+
+        .screenshot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .screenshot-caption {
+            padding: 15px;
+            background-color: white;
+            text-align: center;
+        }
+
+        /* Setup instructions */
+        .instructions {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .instruction-step {
+            margin-bottom: 25px;
+            padding-left: 70px;
+            position: relative;
+        }
+
+        .instruction-step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        /* Troubleshooting */
+        .troubleshooting {
+            margin: 40px 0;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            background-color: rgba(0, 113, 227, 0.05);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+
+        /* Future features */
+        .future-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .future-feature {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .future-feature:hover {
+            transform: translateY(-5px);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .future-feature i {
+            font-size: 30px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .cta-button:hover {
+            background-color: #005bbf;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 113, 227, 0.4);
+        }
+
+        /* Screen mockup */
+        .mockup {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 5px;
+            margin-right: 15px;
+        }
+
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control.red {
+            background-color: #ff5f56;
+        }
+
+        .control.yellow {
+            background-color: #ffbd2e;
+        }
+
+        .control.green {
+            background-color: #27c93f;
+        }
+
+        .mockup-title {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .mockup-content {
+            padding: 15px 0;
+        }
+
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+
+        .mock-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 2px solid transparent;
+        }
+
+        .mock-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .workflow {
+                flex-direction: column;
+            }
+
+            .step {
+                margin-bottom: 40px;
+            }
+
+            .step::after, .step::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1>Ada AI Assistant</h1>
+            <p class="subtitle">Your intelligent macOS companion</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="introduction">Introduction</button>
+            <button class="tab-btn" data-tab="examples">Examples & Workflow</button>
+            <button class="tab-btn" data-tab="setup">Setup & Roadmap</button>
+            <button class="tab-btn" data-tab="advanced">Advanced Features</button>
+            <button class="tab-btn" data-tab="applescript">Apple Scripting</button>
+            <button class="tab-btn" data-tab="intelligence">The Intelligence</button>
+        </div>
+
+        <!-- Introduction Tab -->
+        <div id="introduction" class="tab-content active">
+            <!-- Hero Section -->
+            <div style="position: relative; background: linear-gradient(135deg, #0071e3, #86b9ff); color: white; padding: 50px 20px; border-radius: 20px; margin-bottom: 40px; overflow: hidden; text-align: center;">
+                <!-- Animated particles -->
+                <div class="particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1;"></div>
+                
+                <div style="position: relative; z-index: 2;">
+                    <h1 style="font-size: 3.5rem; margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Meet Ada</h1>
+                    <p style="font-size: 1.8rem; max-width: 800px; margin: 0 auto 30px; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Your intelligent macOS companion powered by OpenAI's Realtime API</p>
+                    
+                    <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(10px);">
+                        <span style="font-size: 1.2rem; font-weight: bold;">Try saying:</span> 
+                        <span id="command-text" style="font-style: italic; margin-left: 10px;">"Hey Ada, what can you help me with today?"</span>
+                    </div>
+                </div>
+                
+                <!-- Decorative elements -->
+                <div style="position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(20px);"></div>
+                <div style="position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(15px);"></div>
+            </div>
+
+            <div class="card" style="position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -30px; right: -30px; font-size: 200px; opacity: 0.03; color: var(--primary-color);">
+                    <i class="fas fa-robot"></i>
+                </div>
+                
+                <h2>Meet Ada - Your AI-Powered macOS Assistant</h2>
+                <p>Ada is a sophisticated AI assistant designed specifically for macOS, leveraging OpenAI's Realtime API to provide a seamless, voice-activated experience. With advanced natural language processing capabilities, Ada understands your commands, answers questions, and performs tasks - all through a native Swift UI interface.</p>
+                
+                <!-- Animated conversation example -->
+                <div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 30px 0; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                    <div class="chat-container">
+                        <div class="chat-message user">
+                            <div class="avatar" style="background-color: #eee; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <i class="fas fa-user" style="color: #666;"></i>
+                            </div>
+                            <div style="background: #e1e1e6; padding: 12px 20px; border-radius: 20px; border-top-left-radius: 5px; max-width: 80%;">
+                                Hey Ada, can you analyze last quarter's sales data and create a summary report?
+                            </div>
+                        </div>
+                        <div class="chat-message assistant" style="display: flex; margin-top: 15px; justify-content: flex-end;">
+                            <div style="background: #0071e3; color: white; padding: 12px 20px; border-radius: 20px; border-top-right-radius: 5px; max-width: 80%;">
+                                I'll analyze the sales data for you. Would you like me to include visualizations of key metrics and growth trends in the summary report?
+                            </div>
+                            <div class="avatar" style="background-color: var(--primary-color); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                <i class="fas fa-robot" style="color: white;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Why Ada?</h3>
+                <p>In an era of increasing digital complexity, Ada simplifies your workflow by providing an intelligent, conversational interface to your computer. Whether you're a developer, content creator, or business professional, Ada adapts to your needs and enhances your productivity.</p>
+                
+                <!-- Testimonial-style quotes -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: #f9f9f9; padding: 25px; border-radius: 12px; position: relative;">
+                        <div style="position: absolute; top: 15px; left: 15px; font-size: 40px; color: var(--primary-color); opacity: 0.2;">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p style="font-style: italic; position: relative; z-index: 1; padding-top: 20px;">Ada has transformed how I interact with my Mac. It's like having a brilliant assistant who understands exactly what I need.</p>
+                        <div style="margin-top: 15px; display: flex; align-items: center;">
+                            <div style="width: 40px; height: 40px; background-color: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="color: #666;"></i>
+                            </div>
+                            <div style="margin-left: 10px;">
+                                <div style="font-weight: bold;">Sarah J.</div>
+                                <div style="font-size: 0.9rem; color: #666;">UI/UX Designer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color: #f9f9f9; padding: 25px; border-radius: 12px; position: relative;">
+                        <div style="position: absolute; top: 15px; left: 15px; font-size: 40px; color: var(--primary-color); opacity: 0.2;">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p style="font-style: italic; position: relative; z-index: 1; padding-top: 20px;">As a developer, Ada's ability to execute complex tasks and maintain context is incredibly valuable. It's become an essential tool in my workflow.</p>
+                        <div style="margin-top: 15px; display: flex; align-items: center;">
+                            <div style="width: 40px; height: 40px; background-color: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="color: #666;"></i>
+                            </div>
+                            <div style="margin-left: 10px;">
+                                <div style="font-weight: bold;">Michael T.</div>
+                                <div style="font-size: 0.9rem; color: #666;">Software Engineer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced features section with animations and more visual appeal -->
+            <div class="features" style="position: relative;">
+                <!-- Decorative background elements -->
+                <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,113,227,0.05) 0%, rgba(0,113,227,0) 70%); border-radius: 50%; top: 100px; left: -150px; z-index: -1;"></div>
+                <div style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,113,227,0.05) 0%, rgba(0,113,227,0) 70%); border-radius: 50%; bottom: 50px; right: -100px; z-index: -1;"></div>
+                
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(-5deg);">
+                        <i class="fas fa-microphone" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>Voice Interaction</h3>
+                    <p>Speak naturally to Ada and receive voice responses, enabling hands-free operation with advanced speech recognition technology.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Natural conversation
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Real-time responses
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Multi-language support
+                    </div>
+                </div>
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(5deg);">
+                        <i class="fas fa-database" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>Memory Management</h3>
+                    <p>Ada remembers context between sessions, creating a more personalized experience with persistent memory storage.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Session persistence
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Contextual awareness
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Personalized responses
+                    </div>
+                </div>
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(-5deg);">
+                        <i class="fas fa-folder" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>File Operations</h3>
+                    <p>Create, read, and modify files with simple voice commands or text prompts, streamlining document management.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Content generation
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Document analysis
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Format conversion
+                    </div>
+                </div>
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(5deg);">
+                        <i class="fas fa-terminal" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>Code Execution</h3>
+                    <p>Run Python scripts, check code validity, and analyze results with intelligent debugging assistance.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Script execution
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Code validation
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Error analysis
+                    </div>
+                </div>
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(-5deg);">
+                        <i class="fas fa-globe" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>Web Integration</h3>
+                    <p>Open websites, scrape content, and interact with web resources through natural language commands.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Web navigation
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Content extraction
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Research assistance
+                    </div>
+                </div>
+                <div class="feature" style="transition: all 0.3s ease; transform-origin: center;">
+                    <div style="background: linear-gradient(135deg, #0071e3, #86b9ff); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transform: rotate(5deg);">
+                        <i class="fas fa-table" style="font-size: 35px; color: white;"></i>
+                    </div>
+                    <h3>Database Operations</h3>
+                    <p>Query SQLite, DuckDB, or PostgreSQL databases with natural language for effortless data analysis.</p>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Natural language queries
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Multi-database support
+                        <br>
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Data visualization
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="position: relative; overflow: hidden;">
+                <!-- Adding a subtle background pattern -->
+                <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 30%; background: linear-gradient(135deg, transparent, rgba(0,113,227,0.05)); z-index: 0;"></div>
+                
+                <h2>Key Benefits</h2>
+                <p>Ada transforms how you interact with your macOS environment, offering:</p>
+                
+                <!-- More visual benefits list -->
+                <div style="margin: 30px 0; position: relative; z-index: 1;">
+                    <div style="display: flex; align-items: center; margin-bottom: 20px; border-left: 4px solid var(--success-color); padding-left: 20px; background-color: rgba(52, 199, 89, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;">
+                        <div style="background-color: rgba(52, 199, 89, 0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                            <i class="fas fa-rocket" style="color: var(--success-color); font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Increased Productivity</strong>
+                            <p style="margin: 0;">Accomplish tasks faster through voice commands and automation, saving hours each week.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 20px; border-left: 4px solid var(--primary-color); padding-left: 20px; background-color: rgba(0, 113, 227, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;">
+                        <div style="background-color: rgba(0, 113, 227, 0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                            <i class="fas fa-puzzle-piece" style="color: var(--primary-color); font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Seamless Integration</strong>
+                            <p style="margin: 0;">Works with your existing macOS applications and workflows without disrupting your established processes.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 20px; border-left: 4px solid #9f56ff; padding-left: 20px; background-color: rgba(159, 86, 255, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;">
+                        <div style="background-color: rgba(159, 86, 255, 0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                            <i class="fas fa-exchange-alt" style="color: #9f56ff; font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Flexible Interaction</strong>
+                            <p style="margin: 0;">Use voice or text input based on your preference and situation, adapting to your working environment.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 20px; border-left: 4px solid #ff9500; padding-left: 20px; background-color: rgba(255, 149, 0, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;">
+                        <div style="background-color: rgba(255, 149, 0, 0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                            <i class="fas fa-brain" style="color: #ff9500; font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Powerful Memory</strong>
+                            <p style="margin: 0;">Maintains context between sessions for more coherent interactions and personalized assistance.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; border-left: 4px solid #ac8e68; padding-left: 20px; background-color: rgba(172, 142, 104, 0.05); padding: 15px 15px 15px 20px; border-radius: 0 8px 8px 0;">
+                        <div style="background-color: rgba(172, 142, 104, 0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                            <i class="fab fa-apple" style="color: #ac8e68; font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Native Experience</strong>
+                            <p style="margin: 0;">Built with SwiftUI for optimal performance on Apple silicon, delivering a fast and responsive experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#setup" class="cta-button tab-link" data-tab="setup">Get Started with Ada</a>
+            </div>
+        </div>
+
+        <!-- Examples & Workflow Tab -->
+        <div id="examples" class="tab-content">
+            <div class="card">
+                <h2>What Can Ada Do?</h2>
+                <p>Ada is designed to streamline your digital workflow through natural language interaction. Here are some practical examples of how Ada can assist you:</p>
+            </div>
+
+            <div class="workflow">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-power-off"></i>
+                    </div>
+                    <h3>Launch</h3>
+                    <p>Start Ada through the SwiftUI app</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Speak</h3>
+                    <p>Give voice commands or type prompts</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Process</h3>
+                    <p>Ada processes your request</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Result</h3>
+                    <p>Ada completes the task and responds</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Common Use Cases</h2>
+                
+                <h3>Voice Commands</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>"Hey Ada, how are you?"</li>
+                    <li>"What's the current time?"</li>
+                    <li>"Open ChatGPT, Claude, and Hacker News."</li>
+                    <li>"Create a new CSV file called user analytics with 10 mock rows."</li>
+                    <li>"Generate a diagram outlining the architecture of a minimal TikTok clone."</li>
+                    <li>"Check if example.py is runnable code."</li>
+                </ul>
+
+                <h3>Database Operations</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>"Load the tables into memory."</li>
+                    <li>"Select all Users and save to CSV file."</li>
+                    <li>"Execute SQL query to find users who joined this month."</li>
+                </ul>
+
+                <h3>File and Memory Management</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>"Copy my current clipboard to memory."</li>
+                    <li>"Read all files in the scratch pad directory into memory."</li>
+                    <li>"Scrape the URL from my clipboard and save it to a file."</li>
+                </ul>
+            </div>
+
+            <h2 style="margin: 40px 0 20px;">SwiftUI Interface</h2>
+            <p>The native macOS Swift configuration interface provides a user-friendly way to set up and manage Ada:</p>
+
+            <div class="screenshots">
+                <div class="screenshot">
+                    <div class="mockup">
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <div class="control red"></div>
+                                <div class="control yellow"></div>
+                                <div class="control green"></div>
+                            </div>
+                            <div class="mockup-title">Ada AI Assistant Config</div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="tab-nav">
+                                <div class="mock-tab active">Environment</div>
+                                <div class="mock-tab">Personalization</div>
+                                <div class="mock-tab">Launch</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">OpenAI API Key:</label>
+                                <input type="password" class="form-control" value="••••••••••••••••••••••••••••••" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Personalization File:</label>
+                                <input type="text" class="form-control" value="./personalization.json" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Scratch Pad Directory:</label>
+                                <input type="text" class="form-control" value="./scratchpad" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">Environment Configuration Tab</div>
+                </div>
+
+                <div class="screenshot">
+                    <div class="mockup">
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <div class="control red"></div>
+                                <div class="control yellow"></div>
+                                <div class="control green"></div>
+                            </div>
+                            <div class="mockup-title">Ada AI Assistant Config</div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="tab-nav">
+                                <div class="mock-tab">Environment</div>
+                                <div class="mock-tab active">Personalization</div>
+                                <div class="mock-tab">Launch</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">AI Assistant Name:</label>
+                                <input type="text" class="form-control" value="Ada" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Human Name:</label>
+                                <input type="text" class="form-control" value="Dan" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">SQL Dialect:</label>
+                                <div style="display: flex; gap: 5px;">
+                                    <button style="flex: 1; padding: 8px; background: #f5f5f7; border: none; border-radius: 5px;">SQLite</button>
+                                    <button style="flex: 1; padding: 8px; background: #0071e3; color: white; border: none; border-radius: 5px;">DuckDB</button>
+                                    <button style="flex: 1; padding: 8px; background: #f5f5f7; border: none; border-radius: 5px;">PostgreSQL</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">Personalization Tab</div>
+                </div>
+
+                <div class="screenshot">
+                    <div class="mockup">
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <div class="control red"></div>
+                                <div class="control yellow"></div>
+                                <div class="control green"></div>
+                            </div>
+                            <div class="mockup-title">Ada AI Assistant Config</div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="tab-nav">
+                                <div class="mock-tab">Environment</div>
+                                <div class="mock-tab">Personalization</div>
+                                <div class="mock-tab active">Launch</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Initial Prompt (Optional):</label>
+                                <textarea class="form-control" style="height: 80px; resize: none;" disabled>Hello Ada! What can you help me with today?</textarea>
+                            </div>
+                            <div style="text-align: center; margin-top: 20px;">
+                                <button style="padding: 12px 30px; background: #0071e3; color: white; border: none; border-radius: 20px; font-weight: bold;">Launch Assistant</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">Launch Tab</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup & Roadmap Tab -->
+        <div id="setup" class="tab-content">
+            <div class="card">
+                <h2>Getting Started with Ada</h2>
+                <p>Setting up Ada on your macOS system is straightforward. Follow these steps to install and configure your AI assistant:</p>
+            </div>
+
+            <div class="instructions">
+                <div class="instruction-step">
+                    <h3>Clone the Repository</h3>
+                    <p>Open Terminal and run the following command to clone the repository:</p>
+                    <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">git clone https://github.com/yourusername/poc-realtime-ai-assistant.git</pre>
+                    <p>Navigate to the project directory:</p>
+                    <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">cd poc-realtime-ai-assistant</pre>
+                </div>
+                
+                <div class="instruction-step">
+                    <h3>Install Dependencies</h3>
+                    <p>Install UV, the modern Python package manager:</p>
+                    <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">curl -sSf https://install.astral.sh/uv | bash</pre>
+                    <p>Install project dependencies:</p>
+                    <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">uv sync</pre>
+                </div>
+
+                <div class="instruction-step">
+                    <h3>Configure the Assistant</h3>
+                    <p>Open the SwiftUI configuration app in Xcode:</p>
+                    <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">open SwiftConfigUI/AIAssistantConfig.xcodeproj</pre>
+                    <p>Build and run the app (⌘R). Use the interface to:</p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>Enter your OpenAI API key</li>
+                        <li>Customize the assistant's name and behavior</li>
+                        <li>Configure file paths and database settings</li>
+                    </ul>
+                </div>
+
+                <div class="instruction-step">
+                    <h3>Launch Ada</h3>
+                    <p>You can launch Ada in two ways:</p>
+                    <ol style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Using the Swift UI:</strong> Navigate to the "Launch" tab and click "Launch Assistant"</li>
+                        <li><strong>Using Terminal:</strong> Run <code>uv run main</code> or with initial prompts: <code>uv run main --prompts "Hello, Ada!"</code></li>
+                    </ol>
+                </div>
+
+                <div class="instruction-step">
+                    <h3>Start Interacting</h3>
+                    <p>Once launched, you can interact with Ada through:</p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Voice commands:</strong> Speak naturally, prefacing requests with "Hey Ada" if desired</li>
+                        <li><strong>Text input:</strong> Type commands directly in the terminal window</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Troubleshooting</h2>
+            </div>
+
+            <div class="troubleshooting">
+                <div class="faq-item">
+                    <div class="faq-question">Microphone Not Working</div>
+                    <div class="faq-answer">
+                        <p>If Ada can't hear you:</p>
+                        <ol>
+                            <li>Check macOS microphone permissions in System Preferences > Security & Privacy > Microphone</li>
+                            <li>Ensure your microphone is selected as the default input device</li>
+                            <li>Restart the assistant after making changes</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">API Key Issues</div>
+                    <div class="faq-answer">
+                        <p>If you're encountering API key errors:</p>
+                        <ol>
+                            <li>Verify your OpenAI API key in the Swift configuration app</li>
+                            <li>Ensure your OpenAI account has access to the Realtime API</li>
+                            <li>Check for any billing issues in your OpenAI account</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Database Connection Problems</div>
+                    <div class="faq-answer">
+                        <p>If database operations aren't working:</p>
+                        <ol>
+                            <li>Verify the database paths in your configuration</li>
+                            <li>For SQLite/DuckDB: Reset using provided scripts in README</li>
+                            <li>For PostgreSQL: Check connection string and credentials</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Audio Response Issues</div>
+                    <div class="faq-answer">
+                        <p>If audio responses are cutting out or not playing:</p>
+                        <ol>
+                            <li>Check your output device settings</li>
+                            <li>This is a known issue being addressed in future updates</li>
+                            <li>As a workaround, restart the assistant</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Future Roadmap</h2>
+                <p>Ada is continually evolving with new features and improvements planned for upcoming releases:</p>
+            </div>
+
+            <div class="future-features">
+                <div class="future-feature">
+                    <i class="fas fa-sync-alt"></i>
+                    <h3>Interruption Handling</h3>
+                    <p>Ability to interrupt Ada mid-response for a more natural conversation flow.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-history"></i>
+                    <h3>Transcript Logging</h3>
+                    <p>Comprehensive logs of all interactions for reference and review.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-file-code"></i>
+                    <h3>Typed Personalization</h3>
+                    <p>Using Pydantic for strict typing of personalization settings.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Parallel Tool Execution</h3>
+                    <p>Run multiple tools simultaneously for improved performance.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Enhanced Audio</h3>
+                    <p>Fix issues with audio cutting out near the end of responses.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-brain"></i>
+                    <h3>Model Switching</h3>
+                    <p>Support for multiple AI models including Grok API integration.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-desktop"></i>
+                    <h3>Screen Context</h3>
+                    <p>Ability to understand and interact with on-screen content.</p>
+                </div>
+                <div class="future-feature">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Calendar Integration</h3>
+                    <p>Manage appointments and schedule events through voice commands.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features Tab -->
+        <div id="advanced" class="tab-content">
+            <div class="card">
+                <h2>Enhanced Capabilities with Google GenAI Integration</h2>
+                <p>By leveraging the Google GenAI resources, we can significantly expand Ada's capabilities on your MacBook. These advanced integrations would transform Ada into a more powerful assistant with broader capabilities across multiple domains.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-brain"></i>
+                    <h3>Gemini Integration</h3>
+                    <p>Incorporate Google's Gemini model for enhanced reasoning, multimodal understanding, and more nuanced responses.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-eye"></i>
+                    <h3>Computer Vision</h3>
+                    <p>Allow Ada to see and interpret images, screenshots, and visual content on your MacBook.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-music"></i>
+                    <h3>Enhanced Audio</h3>
+                    <p>Improve Ada's speech recognition, add music identification, and enable advanced audio analysis capabilities.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-language"></i>
+                    <h3>Translation Powers</h3>
+                    <p>Integrate real-time translation capabilities for over 100 languages with high accuracy.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>RAG Framework</h3>
+                    <p>Implement Retrieval Augmented Generation for grounding Ada's responses in your personal documents.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-vector-square"></i>
+                    <h3>Embeddings</h3>
+                    <p>Use embeddings for semantic search across your files and better understanding of content relationships.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Practical Applications on Your MacBook</h2>
+                
+                <h3>Multimodal Workflows</h3>
+                <p>With multimodal capabilities, Ada could analyze the content currently on your screen, allowing for more contextual assistance:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-desktop" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Screen Analysis</span>
+                        </div>
+                        <p>"Ada, what's wrong with this spreadsheet formula?"</p>
+                        <p><em>Ada analyzes the visible Excel document to debug formulas.</em></p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-camera" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Image Understanding</span>
+                        </div>
+                        <p>"Ada, what does this error message mean?"</p>
+                        <p><em>Ada interprets error dialogs and provides solutions.</em></p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-file-code" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Code Analysis</span>
+                        </div>
+                        <p>"Ada, optimize this function for performance."</p>
+                        <p><em>Ada analyzes visible code and suggests improvements.</em></p>
+                    </div>
+                </div>
+
+                <h3>Knowledge Grounding with RAG</h3>
+                <p>Retrieval Augmented Generation would allow Ada to ground responses in your personal data:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-search" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Personal Knowledge Base</span>
+                        </div>
+                        <p>"Ada, what was in that email Susan sent last week about the project timeline?"</p>
+                        <p><em>Ada searches your emails and provides accurate information.</em></p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-folder-open" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Document Integration</span>
+                        </div>
+                        <p>"Ada, summarize our company's quarterly reports from this year."</p>
+                        <p><em>Ada accesses, analyzes, and summarizes your documents.</em></p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-history" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Browsing History</span>
+                        </div>
+                        <p>"Ada, find that article about Swift concurrency I read last month."</p>
+                        <p><em>Ada searches your browsing history for relevant content.</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Implementation Approach</h2>
+                <p>Integrating these features would involve the following steps:</p>
+                
+                <div class="workflow" style="margin-top: 30px;">
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-code-branch"></i>
+                        </div>
+                        <h3>API Integration</h3>
+                        <p>Connect to Google's GenAI APIs</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Vector Database</h3>
+                        <p>Implement embedding storage</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Model Orchestration</h3>
+                        <p>Create model switching framework</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Privacy Controls</h3>
+                        <p>Ensure data privacy and security</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 40px;">Architectural Integration</h3>
+                <p>The SwiftUI configuration interface would be extended with additional tabs for these advanced features:</p>
+                
+                <div class="mockup" style="margin-top: 30px;">
+                    <div class="mockup-header">
+                        <div class="window-controls">
+                            <div class="control red"></div>
+                            <div class="control yellow"></div>
+                            <div class="control green"></div>
+                        </div>
+                        <div class="mockup-title">Ada AI Assistant Config - Advanced Features</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="tab-nav">
+                            <div class="mock-tab">Environment</div>
+                            <div class="mock-tab">Personalization</div>
+                            <div class="mock-tab">Launch</div>
+                            <div class="mock-tab active">Models</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Primary Model:</label>
+                            <div style="display: flex; gap: 5px;">
+                                <button style="flex: 1; padding: 8px; background: #0071e3; color: white; border: none; border-radius: 5px;">OpenAI gpt-4o</button>
+                                <button style="flex: 1; padding: 8px; background: #f5f5f7; border: none; border-radius: 5px;">Google Gemini Pro</button>
+                                <button style="flex: 1; padding: 8px; background: #f5f5f7; border: none; border-radius: 5px;">Hybrid</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Google API Key:</label>
+                            <input type="password" class="form-control" value="••••••••••••••••••••••••••••••" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Enable Features:</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked disabled style="margin-right: 8px;">
+                                    <label>Computer Vision</label>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked disabled style="margin-right: 8px;">
+                                    <label>Enhanced Audio</label>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked disabled style="margin-right: 8px;">
+                                    <label>RAG Framework</label>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked disabled style="margin-right: 8px;">
+                                    <label>Translation</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#setup" class="cta-button tab-link" data-tab="setup">Explore Basic Setup First</a>
+            </div>
+        </div>
+
+        <!-- Apple Scripting Tab -->
+        <div id="applescript" class="tab-content">
+            <div class="card">
+                <h2>Unleashing Ada with Apple Automation</h2>
+                <p>Imagine combining Ada's intelligence with the power of macOS automation. By integrating Ada with Apple Shortcuts and Automator, you can create powerful workflows that extend her capabilities throughout your entire system.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-magic"></i>
+                    <h3>Shortcuts Integration</h3>
+                    <p>Connect Ada to Apple Shortcuts for seamless multi-step actions triggered by voice commands.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Automator Workflows</h3>
+                    <p>Create complex Automator workflows that Ada can trigger and manage on your behalf.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>AppleScript Control</h3>
+                    <p>Use AppleScript to give Ada deeper control over your macOS applications and system.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>Bi-directional Communication</h3>
+                    <p>Allow scripts to send data back to Ada for intelligent processing and next steps.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Scheduled Tasks</h3>
+                    <p>Set up Ada to run scheduled automation tasks without manual intervention.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-universal-access"></i>
+                    <h3>System-wide Accessibility</h3>
+                    <p>Give Ada the ability to control any aspect of macOS through automation frameworks.</p>
+                </div>
+            </div>
+
+            <h2 style="margin: 40px 0 20px;">Integration Examples by Complexity</h2>
+
+            <div class="card">
+                <h3>Beginner: Simple File and App Interactions</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-folder-open" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Document Organization</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, organize my Downloads folder."</p>
+                        <p><strong>Action:</strong> Triggers a Shortcut that sorts files in Downloads by type into categorized folders.</p>
+                        <p><strong>Implementation:</strong> Simple Shortcuts workflow with 'Find Files' and 'Move File' actions.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-calendar-check" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Quick Meeting Setup</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, set up a Zoom meeting for tomorrow at 2 PM."</p>
+                        <p><strong>Action:</strong> Creates calendar event with Zoom link and sends invites to specified contacts.</p>
+                        <p><strong>Implementation:</strong> Shortcut connecting Calendar and Zoom apps with variable inputs from Ada.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-bell" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Smart Reminders</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, remind me to check the quarterly report when I get to the office."</p>
+                        <p><strong>Action:</strong> Creates location-based reminder that triggers when you arrive at work.</p>
+                        <p><strong>Implementation:</strong> Shortcuts integration with Reminders app using location triggers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Intermediate: Workflow Automation and Data Processing</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-file-invoice" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Expense Report Generator</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, process last month's expenses and send to accounting."</p>
+                        <p><strong>Action:</strong> Collects expense files, generates report with totals, and emails to accounting department.</p>
+                        <p><strong>Implementation:</strong> Automator workflow with shell scripts to process CSV data, create PDF, and send email.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-photo-video" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Media Processor</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, prepare the product photos for the website."</p>
+                        <p><strong>Action:</strong> Batch processes images (resize, watermark, optimize) and organizes them by product category.</p>
+                        <p><strong>Implementation:</strong> Shortcuts with AppleScript to control image editing applications and file system.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-tasks" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Project Tracker</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, update project status based on GitHub issues."</p>
+                        <p><strong>Action:</strong> Fetches GitHub issues, updates project tracking spreadsheet, and sends status report.</p>
+                        <p><strong>Implementation:</strong> Automator workflow with shell scripts using GitHub API and Numbers automation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Advanced: System-wide Intelligent Automation</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-briefcase" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Work Mode Orchestrator</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, activate work mode for the product design meeting."</p>
+                        <p><strong>Action:</strong> 
+                        <ul style="margin-left: 20px; line-height: 1.5;">
+                            <li>Opens required applications (Figma, Slack, Notes)</li>
+                            <li>Sets up specific desktop arrangement</li>
+                            <li>Connects to appropriate video conference</li>
+                            <li>Gathers relevant files from different locations</li>
+                            <li>Sets up Do Not Disturb with meeting-specific exceptions</li>
+                        </ul>
+                        </p>
+                        <p><strong>Implementation:</strong> Complex AppleScript orchestrating multiple applications with state management and context awareness.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-chart-line" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Data Analysis Pipeline</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, run the quarterly sales analysis and prepare the executive presentation."</p>
+                        <p><strong>Action:</strong>
+                        <ul style="margin-left: 20px; line-height: 1.5;">
+                            <li>Fetches sales data from multiple sources</li>
+                            <li>Runs analysis scripts in Python or R</li>
+                            <li>Generates visualization graphs</li>
+                            <li>Creates executive presentation with insights</li>
+                            <li>Schedules delivery to management team</li>
+                        </ul>
+                        </p>
+                        <p><strong>Implementation:</strong> Multi-stage Automator workflow with scripts connecting databases, analysis tools, and presentation software.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-laptop-house" style="font-size: 24px; color: var(--primary-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Smart Home + Mac Integration</span>
+                        </div>
+                        <p><strong>Voice Command:</strong> "Ada, prepare for my evening coding session."</p>
+                        <p><strong>Action:</strong>
+                        <ul style="margin-left: 20px; line-height: 1.5;">
+                            <li>Adjusts smart home lighting and temperature</li>
+                            <li>Sets up development environment on Mac</li>
+                            <li>Activates focus mode and notification filters</li>
+                            <li>Starts preferred coding music playlist</li>
+                            <li>Opens project management and code repositories</li>
+                        </ul>
+                        </p>
+                        <p><strong>Implementation:</strong> Complex integration between HomeKit, AppleScript, and Shortcuts with custom Python scripts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Technical Implementation</h2>
+                
+                <h3>Connecting Ada to Shortcuts</h3>
+                <p>Integration between Ada and Apple's automation tools requires two key components:</p>
+                
+                <ol style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Command Parsing:</strong> Ada needs to identify automation requests in natural language and extract parameters.</li>
+                    <li><strong>Shortcut Execution:</strong> Ada must be able to trigger Shortcuts via URL schemes or shell commands.</li>
+                </ol>
+                
+                <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">
+# Command parsing in Python
+def parse_automation_command(command_text):
+    # Example: Extract command type and parameters using NLP
+    if "organize" in command_text and "folder" in command_text:
+        return {
+            "action": "organize_folder",
+            "parameters": {
+                "folder_name": extract_folder_name(command_text)
+            }
+        }
+    # More command patterns...
+                </pre>
+                
+                <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">
+# Triggering Shortcuts from Python
+def run_shortcut(shortcut_name, parameters=None):
+    import subprocess
+    
+    # Build the URL scheme to call the shortcut
+    url = f"shortcuts://run-shortcut?name={shortcut_name}"
+    if parameters:
+        # Add parameters as needed
+        for key, value in parameters.items():
+            url += f"&input={value}"
+    
+    # Execute the shortcut using 'open' command
+    subprocess.run(["open", url])
+                </pre>
+                
+                <h3>More Advanced: AppleScript Integration</h3>
+                <p>For deeper system integration, AdA can use AppleScript to control applications:</p>
+                
+                <pre style="background: #f5f5f7; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0;">
+# Running AppleScript from Python
+def run_applescript(script_text):
+    import subprocess
+    cmd = ["osascript", "-e", script_text]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result.stdout.strip()
+
+# Example: Ada controlling mail app
+mail_script = '''
+tell application "Mail"
+    set newMessage to make new outgoing message with properties {subject:"Weekly Report", content:"Please find the attached report.", visible:true}
+    tell newMessage
+        make new to recipient with properties {address:"manager@example.com"}
+        tell content
+            make new attachment with properties {file name:"/path/to/report.pdf"} at after last paragraph
+        end tell
+    end tell
+end tell
+'''
+
+run_applescript(mail_script)
+                </pre>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#" class="cta-button" onclick="alert('This would open the Shortcuts editor with the Ada integration template')">Open Shortcuts Template</a>
+            </div>
+        </div>
+
+        <!-- The Intelligence Tab -->
+        <div id="intelligence" class="tab-content">
+            <div class="card">
+                <h2>Ada Intelligence: Current State and Future Evolution</h2>
+                <p>While Ada already offers impressive capabilities, it's important to understand her current limitations and the expected timeline for evolution into a more comprehensive assistant.</p>
+            </div>
+
+            <div class="card">
+                <h2>Current Limitations</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-eye-slash" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Limited System Awareness</span>
+                        </div>
+                        <p>Ada currently lacks real-time awareness of your desktop state, running applications, and screen content without explicit integration.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-lock" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Permission Constraints</span>
+                        </div>
+                        <p>macOS security model limits Ada's ability to control system functions without explicit user authorization for each domain.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-network-wired" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Integration Gaps</span>
+                        </div>
+                        <p>Ada requires manual setup to connect with third-party applications and services, without native integration capabilities.</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-memory" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Context Retention</span>
+                        </div>
+                        <p>Ada has limited ability to maintain complex contextual understanding across sessions without explicit memory management.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-robot" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Proactive Assistance</span>
+                        </div>
+                        <p>Ada primarily operates in reactive mode, responding to commands rather than proactively offering assistance based on context.</p>
+                    </div>
+                    <div style="background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-wifi" style="font-size: 24px; color: var(--danger-color);"></i>
+                            <span style="font-weight: bold; margin-left: 10px;">Offline Capabilities</span>
+                        </div>
+                        <p>Ada requires internet connectivity for core functions, limiting usability in offline environments or low-connectivity situations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Evolution Timeline</h2>
+                <p>This timeline projects Ada's expected capability growth over the coming years:</p>
+                
+                <div style="position: relative; padding: 40px 0; margin: 40px 0;">
+                    <!-- Timeline line -->
+                    <div style="position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background-color: var(--primary-color); transform: translateX(-50%);"></div>
+                    
+                    <!-- 2025 - Near term -->
+                    <div style="display: flex; margin-bottom: 60px;">
+                        <div style="flex: 1; padding-right: 40px; text-align: right;">
+                            <h3 style="color: var(--primary-color);">2025 (Near-term)</h3>
+                            <h4>Basic System Integration</h4>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li>✓ File creation and management</li>
+                                <li>✓ Basic application launching</li>
+                                <li>✓ Simple desktop awareness via screenshots</li>
+                                <li>✓ Expanded system command execution</li>
+                            </ul>
+                        </div>
+                        <div style="position: relative; width: 40px; height: 40px; background-color: white; border: 4px solid var(--primary-color); border-radius: 50%; z-index: 1; margin: 0 -20px;"></div>
+                        <div style="flex: 1; padding-left: 40px;">
+                            <div style="background-color: rgba(0, 113, 227, 0.1); padding: 20px; border-radius: 12px;">
+                                <p><strong>Key Milestone:</strong> Ada will be able to create, read, and modify files in approved directories, launch applications, and execute system commands through a secure permission model.</p>
+                                <p><strong>Comparison to Siri:</strong> More limited than Siri in system integration, but with deeper contextual understanding for specific tasks.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2026 - Mid term -->
+                    <div style="display: flex; margin-bottom: 60px;">
+                        <div style="flex: 1; padding-right: 40px; text-align: right;">
+                            <div style="background-color: rgba(0, 113, 227, 0.1); padding: 20px; border-radius: 12px;">
+                                <p><strong>Key Milestone:</strong> Ada will continuously monitor desktop activity (with permission) to offer contextual assistance, control most system functions, and manage complex application workflows.</p>
+                                <p><strong>Comparison to Siri:</strong> Approaching Siri's system integration capabilities but with significantly more contextual intelligence and task automation.</p>
+                            </div>
+                        </div>
+                        <div style="position: relative; width: 40px; height: 40px; background-color: white; border: 4px solid var(--primary-color); border-radius: 50%; z-index: 1; margin: 0 -20px;"></div>
+                        <div style="flex: 1; padding-left: 40px;">
+                            <h3 style="color: var(--primary-color);">2026 (Mid-term)</h3>
+                            <h4>Advanced System Control</h4>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li>✓ Real-time desktop awareness</li>
+                                <li>✓ Complex application interaction</li>
+                                <li>✓ Context-aware file operations</li>
+                                <li>✓ Native integration with Apple ecosystem</li>
+                                <li>✓ Proactive assistance based on user patterns</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 2027 - Long term -->
+                    <div style="display: flex; margin-bottom: 60px;">
+                        <div style="flex: 1; padding-right: 40px; text-align: right;">
+                            <h3 style="color: var(--primary-color);">2027 (Long-term)</h3>
+                            <h4>Full System Intelligence</h4>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li>✓ Complete visual understanding of screen content</li>
+                                <li>✓ Deeply integrated system operations</li>
+                                <li>✓ Cross-application workflow automation</li>
+                                <li>✓ Predictive assistance</li>
+                                <li>✓ Personalized system optimization</li>
+                                <li>✓ Offline core functionality</li>
+                            </ul>
+                        </div>
+                        <div style="position: relative; width: 40px; height: 40px; background-color: white; border: 4px solid var(--primary-color); border-radius: 50%; z-index: 1; margin: 0 -20px;"></div>
+                        <div style="flex: 1; padding-left: 40px;">
+                            <div style="background-color: rgba(0, 113, 227, 0.1); padding: 20px; border-radius: 12px;">
+                                <p><strong>Key Milestone:</strong> Ada will function as a comprehensive system-wide assistant with full awareness of desktop state, applications, and user context, enabling completely natural interaction.</p>
+                                <p><strong>Comparison to Siri:</strong> Surpassing Siri's capabilities with deeper integration, more contextual awareness, and adaptive intelligence tailored to individual workflow patterns.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Siri Parity -->
+                    <div style="display: flex;">
+                        <div style="flex: 1; padding-right: 40px; text-align: right;">
+                            <div style="background-color: rgba(0, 113, 227, 0.1); padding: 20px; border-radius: 12px;">
+                                <p><strong>Key Milestone:</strong> Ada evolves into a fully capable system assistant with seamless integration across the entire Apple ecosystem, plus enhanced contextual intelligence and personalization beyond current assistant capabilities.</p>
+                            </div>
+                        </div>
+                        <div style="position: relative; width: 40px; height: 40px; background-color: var(--primary-color); border: 4px solid var(--primary-color); border-radius: 50%; z-index: 1; margin: 0 -20px;"></div>
+                        <div style="flex: 1; padding-left: 40px;">
+                            <h3 style="color: var(--primary-color);">2028</h3>
+                            <h4>Complete Siri Parity & Beyond</h4>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li>✓ Full Apple ecosystem integration</li>
+                                <li>✓ System-wide intelligence</li>
+                                <li>✓ Cross-device continuity</li>
+                                <li>✓ Advanced contextual awareness</li>
+                                <li>✓ Personalized adaptive assistance</li>
+                                <li>✓ Comprehensive automation capabilities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Comparison with Apple Siri</h2>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+                        <thead>
+                            <tr style="background-color: var(--primary-color); color: white;">
+                                <th style="padding: 15px; text-align: left;">Capability</th>
+                                <th style="padding: 15px; text-align: center;">Current Ada</th>
+                                <th style="padding: 15px; text-align: center;">Current Siri</th>
+                                <th style="padding: 15px; text-align: center;">Future Ada (2028)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>System Integration</strong></td>
+                                <td style="padding: 15px; text-align: center;">Limited</td>
+                                <td style="padding: 15px; text-align: center;">Native</td>
+                                <td style="padding: 15px; text-align: center;">Enhanced Native</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>Application Control</strong></td>
+                                <td style="padding: 15px; text-align: center;">Basic via Scripts</td>
+                                <td style="padding: 15px; text-align: center;">Native but Limited</td>
+                                <td style="padding: 15px; text-align: center;">Comprehensive</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>File Management</strong></td>
+                                <td style="padding: 15px; text-align: center;">Basic Creation</td>
+                                <td style="padding: 15px; text-align: center;">Limited</td>
+                                <td style="padding: 15px; text-align: center;">Advanced Context-Aware</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>Contextual Awareness</strong></td>
+                                <td style="padding: 15px; text-align: center;">Moderate</td>
+                                <td style="padding: 15px; text-align: center;">Limited</td>
+                                <td style="padding: 15px; text-align: center;">Deep & Persistent</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>Natural Language</strong></td>
+                                <td style="padding: 15px; text-align: center;">Advanced</td>
+                                <td style="padding: 15px; text-align: center;">Moderate</td>
+                                <td style="padding: 15px; text-align: center;">Completely Natural</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>Personalization</strong></td>
+                                <td style="padding: 15px; text-align: center;">Basic</td>
+                                <td style="padding: 15px; text-align: center;">Moderate</td>
+                                <td style="padding: 15px; text-align: center;">Deeply Personalized</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; text-align: left;"><strong>Automation</strong></td>
+                                <td style="padding: 15px; text-align: center;">Good via Scripts</td>
+                                <td style="padding: 15px; text-align: center;">Limited</td>
+                                <td style="padding: 15px; text-align: center;">Comprehensive</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; text-align: left;"><strong>Ecosystem Integration</strong></td>
+                                <td style="padding: 15px; text-align: center;">Limited</td>
+                                <td style="padding: 15px; text-align: center;">Comprehensive</td>
+                                <td style="padding: 15px; text-align: center;">Comprehensive+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Summary: The Path to a Complete macOS Assistant</h2>
+                <p>Ada is on a journey to evolve from a powerful but somewhat isolated assistant to a fully integrated system intelligence that enhances every aspect of your macOS experience. Here's what that means for users:</p>
+                
+                <div style="margin: 30px 0;">
+                    <div style="background-color: rgba(0, 113, 227, 0.05); padding: 25px; border-radius: 12px; border-left: 4px solid var(--primary-color);">
+                        <p style="font-size: 1.1rem; line-height: 1.7;">By 2028, Ada will offer a truly transformative macOS experience that surpasses current voice assistants. While Siri focuses on broad ecosystem integration with simpler commands, Ada will combine deep system access with contextually rich understanding. The result will be an assistant that doesn't just respond to commands but anticipates needs, adapts to your work patterns, and handles complex multi-step workflows across applications with natural conversation.</p>
+                        <p style="font-size: 1.1rem; line-height: 1.7; margin-top: 15px;">Unlike today's assistants which often feel like separate tools, the future Ada will feel like a natural extension of your thought process - seamlessly translating your intentions into system actions without the current limitations of strict command syntax or siloed capabilities. This evolution represents not just an improvement to existing paradigms, but a fundamentally new way of interacting with computing systems.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#introduction" class="cta-button tab-link" data-tab="introduction">Begin Your Ada Journey Today</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Ada AI Assistant - Make your macOS experience more intelligent</p>
+            <p><small>&copy; 2025 | A proof-of-concept for next-generation AI assistants</small></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabLinks = document.querySelectorAll('.tab-link');
+
+            function setActiveTab(tabId) {
+                // Remove active class from all tabs
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tab === tabId) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Hide all tab contents and show the active one
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    }
+                });
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+
+            // Tab button click handlers
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    setActiveTab(this.dataset.tab);
+                });
+            });
+
+            // Tab links (for CTA buttons that change tabs)
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    setActiveTab(this.dataset.tab);
+                });
+            });
+
+            // FAQ accordion
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Add animation when scrolling
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature, .step, .screenshot, .instruction-step, .future-feature');
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            // Set initial styles for animation
+            const elementsToAnimate = document.querySelectorAll('.feature, .step, .screenshot, .instruction-step, .future-feature');
+            elementsToAnimate.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            });
+
+            // Run animation on load and scroll
+            window.addEventListener('scroll', animateOnScroll);
+            window.addEventListener('load', animateOnScroll);
+        });
+    </script>
+</body>
+</html>

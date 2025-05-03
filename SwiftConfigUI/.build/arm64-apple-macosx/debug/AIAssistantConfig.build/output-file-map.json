@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/master.swiftdeps"
+  },
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/AIAssistantApp.swift": {
+    "dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.d",
+    "object": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swift.o",
+    "swiftmodule": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/AIAssistantApp.swiftdeps"
+  },
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ConfigurationStore.swift": {
+    "dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.d",
+    "object": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swift.o",
+    "swiftmodule": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ConfigurationStore.swiftdeps"
+  },
+  "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/ContentView.swift": {
+    "dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.d",
+    "object": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swift.o",
+    "swiftmodule": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/denn/Documents/AIAss/poc-realtime-ai-assistant/SwiftConfigUI/.build/arm64-apple-macosx/debug/AIAssistantConfig.build/ContentView.swiftdeps"
+  }
+}
