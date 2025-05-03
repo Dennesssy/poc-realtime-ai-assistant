@@ -12216,7 +12216,7 @@
 			path = 1N;
 			sourceTree = "<group>";
 		};
-		3174E1242DC6B4C8004D9B0D /* Products */ = {
+		3174E1262DC6B5F0004D9B0D /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -29212,7 +29212,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 3174E1242DC6B4C8004D9B0D /* Products */;
+					ProductGroup = 3174E1262DC6B5F0004D9B0D /* Products */;
 					ProjectRef = 860EB07EB34267939A90ABDB /* AIAssistantConfig.xcodeproj */;
 				},
 			);
@@ -33613,6 +33613,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = "*.build*";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -33628,6 +33629,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = "*.build*";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
