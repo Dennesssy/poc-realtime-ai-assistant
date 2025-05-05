@@ -183,6 +183,12 @@ class ConfigurationStore: ObservableObject {
         }
     }
     
+    func saveAllConfigurations() {
+        saveEnvVariables()
+        savePersonalizationSettings()
+        print("All configurations saved successfully.")
+    }
+    
     func resetToDefaults() {
         // Reset environment variables
         openAIApiKey = ""

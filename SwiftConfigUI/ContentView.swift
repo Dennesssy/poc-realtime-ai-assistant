@@ -6,6 +6,16 @@ struct ContentView: View {
     @State private var initialPrompt: String = ""
     @State private var showLaunchSuccessMessage = false
     
+    func setupAIAssistant() {
+        configStore.saveAllConfigurations()  // Calls the new method in ConfigurationStore
+       
+        // Simulate or perform AI assistant setup (e.g., launch a process or log success)
+        // In a real scenario, this could involve additional logic like validating keys.
+        print("AI Assistant setup initiated with saved configuration.")
+       
+        showLaunchSuccessMessage = true  // Toggle the success message
+    }
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             EnvironmentVariablesView()
