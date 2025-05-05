@@ -266,7 +266,9 @@ struct SecureFieldRow: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .environmentObject(ConfigurationStore())
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environmentObject(ConfigurationStore())
+    }
 }
